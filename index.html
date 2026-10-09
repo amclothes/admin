@@ -14,7 +14,7 @@ header{display:flex;align-items:center;gap:12px;padding:12px 5vw;border-bottom:1
 .box{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:20px}
 h2,h3{margin-top:0}
 label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
-input{font:inherit;width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+input,select{font:inherit;width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
 button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:9px 16px}
 button:hover{border-color:var(--ac)}.pri{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd);font-size:14px}
@@ -29,12 +29,43 @@ button:hover{border-color:var(--ac)}.pri{background:var(--ac);color:#fff;border-
 <label>Գին (֏)</label><input id="p" type="number">
 <label>Կատեգորիա (օր.՝ Վերնաշապիկ, Շալվար, Զգեստ)</label><input id="c">
 <label>Չափսեր (ստորակետով)</label><input id="s" value="S,M,L,XL">
+<label>Կարգավիճակ</label><select id="st"><option value="in">Առկա է</option><option value="pre">Նախավաճառք</option><option value="out">Սպառված է</option></select>
+<label>Նախավաճառքի գին (֏), եթե տարբերվում է</label><input id="pp" type="number">
 <label>Նկար</label><input id="i" type="file" accept="image/*">
 <p style="margin:16px 0 0"><button class="pri" id="add">Ավելացնել</button></p></div>
 <div class="box"><h3>Ապրանքներ (<span id="cnt">0</span>)</h3><div id="l"></div>
 <div class="btns" style="margin-top:16px"><button class="pri" id="ex">⬇ Արտահանել products.json</button><button id="im">⬆ Ներմուծել</button><input id="imf" type="file" accept=".json" style="display:none"></div>
 <p style="color:var(--mu);font-size:13px">Տվյալները պահվում են այս սարքի դիտարկիչում։ «Արտահանել» կոճակով ստացիր ֆայլ, որը կարող ես ուղարկել խանութի կայքին։</p></div>
 </div><div class="t" id="t"></div>
+<script>
+const $=id=>document.getElementById(id);
+const K='am-admin-products';let P=[];
+try{P=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(P))}catch(e){toast('Հիշողությունը լցված է, արտահանիր և ջնջիր հները')}};
+const toast=m=>{$('t').textContent=m;$('t').style.display='block';setTimeout(()=>$('t').style.display='none',2500)};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function shrink(f){return new Promise(r=>{const i=new Image,u=URL.createObjectURL(f);i.onload=()=>{const w=600,h=Math.round(i.height*w/i.width),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);URL.revokeObjectURL(u);r(c.toDataURL('image/jpeg',.7))};i.onerror=()=>r('');i.src=u})}
+const opts=v=>[['in','Առկա է'],['pre','Նախավաճառք'],['out','Սպառված է']].map(([k,t])=>`<option value="${k}"${(v||'in')===k?' selected':''}>${t}</option>`).join('');
+function draw(){
+ $('cnt').textContent=P.length;
+ $('l').innerHTML=P.map((x,k)=>`<div class="row"><span style="display:flex;gap:10px;align-items:center">${x.img?`<img src="${x.img}">`:''}<span>${esc(x.name)}<br><small style="color:var(--mu)">${esc(x.cat)} · ${esc((x.sizes||[]).join(','))}</small></span></span><span style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${Number(x.price).toLocaleString()} ֏${x.pp?` → ${Number(x.pp).toLocaleString()} ֏`:''}<select data-s="${k}" style="width:auto;padding:6px 8px">${opts(x.status)}</select><button data-d="${k}">✕</button></span></div>`).join('')||'<p style="color:var(--mu)">Դեռ դատարկ է</p>';
+ $('l').querySelectorAll('[data-s]').forEach(s=>s.onchange=()=>{P[+s.dataset.s].status=s.value;save();toast('Թարմացվեց ✓')});
+ $('l').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{if(confirm('Ջնջե՞լ')){P.splice(+b.dataset.d,1);save();draw()}});
+}
+$('add').onclick=async()=>{
+ const name=$('n').value.trim(),price=$('p').value;
+ if(!name||!price)return toast('Լրացրեք անունը և գինը');
+ const f=$('i').files[0];
+ P.unshift({name,price:+price,cat:$('c').value.trim()||'Այլ',sizes:$('s').value.split(',').map(x=>x.trim()).filter(Boolean),img:f?await shrink(f):'',status:$('st').value,pp:+$('pp').value||0,ts:Date.now()});
+ save();draw();['n','p','c','i','pp'].forEach(k=>$(k).value='');toast('Ավելացվեց ✓');
+};
+$('ex').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(P)],{type:'application/json'}));a.download='products.json';a.click()};
+$('im').onclick=()=>$('imf').click();
+$('imf').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const d=JSON.parse(t);if(Array.isArray(d)){P=d;save();draw();toast('Ներմուծվեց ✓')}}catch(x){toast('Սխալ ֆայլ')}})};
+$('th').onclick=()=>{const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark'};
+if(matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.dataset.theme='dark';
+draw();
+</script></body></html></div><div class="t" id="t"></div>
 <script>
 const $=id=>document.getElementById(id);
 const K='am-admin-products';let P=[];
