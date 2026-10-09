@@ -1,40 +1,67 @@
 <!DOCTYPE html>
 <html lang="hy"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex"><title>amclothes ADMIN</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Armenian:wght@400;600&family=Noto+Sans+Armenian:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>amclothes · Admin</title>
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f7f3ee;--fg:#1d1a17;--card:#fff;--mut:#7b736a;--ac:#1d1a17;--gold:#a8834a;--bd:#e6dfd5;--red:#b8483a;--serif:"Noto Serif Armenian",Georgia,serif;--sans:"Noto Sans Armenian",system-ui,sans-serif}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141311;--fg:#f1ece4;--card:#1e1c19;--mut:#a39a8e;--ac:#f1ece4;--gold:#c9a266;--bd:#322f2a;--red:#e0705f}}
-:root[data-theme="dark"]{--bg:#141311;--fg:#f1ece4;--card:#1e1c19;--mut:#a39a8e;--ac:#f1ece4;--gold:#c9a266;--bd:#322f2a;--red:#e0705f}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.5}
-.top{background:var(--ac);color:var(--bg);text-align:center;font-size:12px;letter-spacing:.08em;padding:7px 10px}
-header{display:flex;justify-content:space-between;align-items:center;padding:12px 22px;border-bottom:1px solid var(--bd);position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;gap:8px;flex-wrap:wrap}
-.logo{display:flex;align-items:center;gap:10px;cursor:pointer;color:var(--fg)}
-.logo svg{width:44px;height:44px}.logo b{font-family:var(--serif);font-size:21px;letter-spacing:.22em;font-weight:600;display:block;line-height:1}
-.logo small{font-size:9px;letter-spacing:.42em;color:var(--gold);display:block;margin-top:4px}
-nav{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
-button{font:inherit;font-size:14px;border:1px solid var(--ac);background:transparent;color:var(--fg);padding:9px 18px;border-radius:999px;cursor:pointer}
-nav button{border-color:transparent}nav button:hover{border-color:var(--bd)}
-button.p{background:var(--ac);color:var(--bg)}button.p:hover{opacity:.88}
-.hero{padding:64px 22px;text-align:center;background:linear-gradient(135deg,var(--card),var(--bg));border-bottom:1px solid var(--bd);border-radius:0 0 36px 36px}
-.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(30px,6vw,52px);margin:0 0 10px;letter-spacing:.04em}
-.hero p{color:var(--mut);margin:0 0 22px}
-main{max-width:1100px;margin:auto;padding:26px 22px 50px}
-h2{font-family:var(--serif);font-weight:400;font-size:26px;letter-spacing:.04em;margin:0 0 16px}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}.chips button{border-color:var(--bd);padding:6px 16px}.chips button.on{background:var(--ac);color:var(--bg);border-color:var(--ac)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:22px}
-.card{display:flex;flex-direction:column;gap:6px;background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:10px 10px 14px}
-.card .im{position:relative;overflow:hidden;background:var(--bd);aspect-ratio:3/4;border-radius:16px}.card img{width:100%;height:100%;object-fit:cover;transition:transform .5s}.card:hover img{transform:scale(1.04)}
-.card.out img{filter:grayscale(1);opacity:.55}
-.card>*:not(.im){margin-left:6px;margin-right:6px}
-.card h3{margin:6px 0 0;font-size:15px;font-weight:500}.card .pr{font-family:var(--serif);font-size:17px}
-.old{text-decoration:line-through;color:var(--mut);font-size:14px;margin-left:6px}
-.card .ct{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
-.bd{position:absolute;top:10px;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:600}
-.bd.l{left:10px;background:var(--red);color:#fff}.bd.r{right:10px;background:var(--card);color:var(--fg);border:1px solid var(--bd)}
+:root{--bg:#faf8f5;--card:#fff;--tx:#1c1a17;--mu:#7a746b;--ac:#b8894b;--bd:#e9e3da}
+:root[data-theme="dark"]{--bg:#0e0e11;--card:#18181d;--tx:#f3efe8;--mu:#9a958c;--ac:#d4a86a;--bd:#2a2a31}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;transition:.3s}
+header{display:flex;align-items:center;gap:12px;padding:12px 5vw;border-bottom:1px solid var(--bd)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.18em}
+.logo svg{width:38px;height:38px}.sp{flex:1}
+.w{max-width:680px;margin:28px auto;padding:0 16px}
+.box{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:20px}
+h2,h3{margin-top:0}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
+input{font:inherit;width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:9px 16px}
+button:hover{border-color:var(--ac)}.pri{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd);font-size:14px}
+.row img{width:44px;height:56px;object-fit:cover;border-radius:6px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.t{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:999px;display:none}
+</style></head><body>
+<header><div class="logo"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="none" stroke="var(--ac)" stroke-width="2"/><path d="M11 33 20 14l4 9 4-9 9 19" fill="none" stroke="var(--tx)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M17 27h14" stroke="var(--ac)" stroke-width="2.4" stroke-linecap="round"/></svg>amclothes · ADMIN</div><div class="sp"></div><button id="th">🌓</button></header>
+<div class="w">
+<div class="box"><h2>Ավելացնել հագուստ</h2>
+<label>Անվանում</label><input id="n">
+<label>Գին (֏)</label><input id="p" type="number">
+<label>Կատեգորիա (օր.՝ Վերնաշապիկ, Շալվար, Զգեստ)</label><input id="c">
+<label>Չափսեր (ստորակետով)</label><input id="s" value="S,M,L,XL">
+<label>Նկար</label><input id="i" type="file" accept="image/*">
+<p style="margin:16px 0 0"><button class="pri" id="add">Ավելացնել</button></p></div>
+<div class="box"><h3>Ապրանքներ (<span id="cnt">0</span>)</h3><div id="l"></div>
+<div class="btns" style="margin-top:16px"><button class="pri" id="ex">⬇ Արտահանել products.json</button><button id="im">⬆ Ներմուծել</button><input id="imf" type="file" accept=".json" style="display:none"></div>
+<p style="color:var(--mu);font-size:13px">Տվյալները պահվում են այս սարքի դիտարկիչում։ «Արտահանել» կոճակով ստացիր ֆայլ, որը կարող ես ուղարկել խանութի կայքին։</p></div>
+</div><div class="t" id="t"></div>
+<script>
+const $=id=>document.getElementById(id);
+const K='am-admin-products';let P=[];
+try{P=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(P))}catch(e){toast('Հիշողությունը լցված է, արտահանիր և ջնջիր հները')}};
+const toast=m=>{$('t').textContent=m;$('t').style.display='block';setTimeout(()=>$('t').style.display='none',2500)};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function shrink(f){return new Promise(r=>{const i=new Image,u=URL.createObjectURL(f);i.onload=()=>{const w=600,h=Math.round(i.height*w/i.width),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);URL.revokeObjectURL(u);r(c.toDataURL('image/jpeg',.7))};i.onerror=()=>r('');i.src=u})}
+function draw(){
+ $('cnt').textContent=P.length;
+ $('l').innerHTML=P.map((x,k)=>`<div class="row"><span style="display:flex;gap:10px;align-items:center">${x.img?`<img src="${x.img}">`:''}<span>${esc(x.name)}<br><small style="color:var(--mu)">${esc(x.cat)} · ${esc((x.sizes||[]).join(','))}</small></span></span><span>${Number(x.price).toLocaleString()} ֏ <button data-d="${k}">✕</button></span></div>`).join('')||'<p style="color:var(--mu)">Դեռ դատարկ է</p>';
+ $('l').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{if(confirm('Ջնջե՞լ')){P.splice(+b.dataset.d,1);save();draw()}});
+}
+$('add').onclick=async()=>{
+ const name=$('n').value.trim(),price=$('p').value;
+ if(!name||!price)return toast('Լրացրեք անունը և գինը');
+ const f=$('i').files[0];
+ P.unshift({name,price:+price,cat:$('c').value.trim()||'Այլ',sizes:$('s').value.split(',').map(x=>x.trim()).filter(Boolean),img:f?await shrink(f):'',ts:Date.now()});
+ save();draw();['n','p','c','i'].forEach(k=>$(k).value='');toast('Ավելացվեց ✓');
+};
+$('ex').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(P)],{type:'application/json'}));a.download='products.json';a.click()};
+$('im').onclick=()=>$('imf').click();
+$('imf').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const d=JSON.parse(t);if(Array.isArray(d)){P=d;save();draw();toast('Ներմուծվեց ✓')}}catch(x){toast('Սխալ ֆայլ')}})};
+$('th').onclick=()=>{const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark'};
+if(matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.dataset.theme='dark';
+draw();
+</script></body></html>.bd.l{left:10px;background:var(--red);color:#fff}.bd.r{right:10px;background:var(--card);color:var(--fg);border:1px solid var(--bd)}
 .buy{display:flex;gap:6px}.buy select{flex:1}
 input,select,textarea{font:inherit;width:100%;padding:11px 14px;border:1px solid var(--bd);border-radius:14px;background:var(--card);color:var(--fg);margin:4px 0 12px}
 select{margin:0;padding:8px 12px}
