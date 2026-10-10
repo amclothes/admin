@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="hy"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>amclothes · Admin</title>
+<title>Mclothes · Admin</title>
 <style>
 :root{--bg:#faf8f5;--card:#fff;--tx:#1c1a17;--mu:#7a746b;--ac:#b8894b;--bd:#e9e3da}
 :root[data-theme="dark"]{--bg:#0e0e11;--card:#18181d;--tx:#f3efe8;--mu:#9a958c;--ac:#d4a86a;--bd:#2a2a31}
@@ -22,7 +22,7 @@ button:hover{border-color:var(--ac)}.pri{background:var(--ac);color:#fff;border-
 .btns{display:flex;gap:10px;flex-wrap:wrap}
 .t{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:999px;display:none}
 </style></head><body>
-<header><div class="logo"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="none" stroke="var(--tx)" stroke-width="1.6"/><path d="M24 17v-2.5a2.6 2.6 0 1 0-2.6-2.6M24 17 12.5 24h23z" fill="none" stroke="var(--tx)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/><text x="24" y="37" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="10" fill="var(--tx)">AM</text></svg><span>AMCLOTHES <small style="font-size:11px;color:var(--mu);letter-spacing:.2em">ADMIN PANEL</small></span></div><div class="sp"></div><button id="th">🌓</button></header>
+<header><div class="logo"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="none" stroke="var(--tx)" stroke-width="1.6"/><path d="M24 17v-2.5a2.6 2.6 0 1 0-2.6-2.6M24 17 12.5 24h23z" fill="none" stroke="var(--tx)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/><text x="24" y="37" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="10" fill="var(--tx)">M</text></svg><span>MCLOTHES <small style="font-size:11px;color:var(--mu);letter-spacing:.2em">ADMIN PANEL</small></span></div><div class="sp"></div><button id="th">🌓</button></header>
 <div class="w">
 <div class="box"><h2>Ավելացնել հագուստ</h2>
 <label>Անվանում</label><input id="n">
@@ -35,6 +35,37 @@ button:hover{border-color:var(--ac)}.pri{background:var(--ac);color:#fff;border-
 <p style="margin:16px 0 0"><button class="pri" id="add">Ավելացնել</button></p></div>
 <div class="box"><h3>Ապրանքներ (<span id="cnt">0</span>)</h3><div id="l"></div>
 <div class="btns" style="margin-top:16px"><button class="pri" id="ex">⬇ Արտահանել products.json</button><button id="im">⬆ Ներմուծել</button><input id="imf" type="file" accept=".json" style="display:none"></div>
+<p style="color:var(--mu);font-size:13px">Տվյալները պահվում են այս սարքի դիտարկիչում։ «Արտահանել» կոճակով ստացիր ֆայլ, որը կարող ես ուղարկել խանութի կայքին։</p></div>
+</div><div class="t" id="t"></div>
+<script>
+const $=id=>document.getElementById(id);
+const K='am-admin-products';let P=[];
+try{P=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(P))}catch(e){toast('Հիշողությունը լցված է, արտահանիր և ջնջիր հները')}};
+const toast=m=>{$('t').textContent=m;$('t').style.display='block';setTimeout(()=>$('t').style.display='none',2500)};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function shrink(f){return new Promise(r=>{const i=new Image,u=URL.createObjectURL(f);i.onload=()=>{const w=600,h=Math.round(i.height*w/i.width),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);URL.revokeObjectURL(u);r(c.toDataURL('image/jpeg',.7))};i.onerror=()=>r('');i.src=u})}
+const opts=v=>[['in','Առկա է'],['pre','Նախավաճառք'],['out','Սպառված է']].map(([k,t])=>`<option value="${k}"${(v||'in')===k?' selected':''}>${t}</option>`).join('');
+function draw(){
+ $('cnt').textContent=P.length;
+ $('l').innerHTML=P.map((x,k)=>`<div class="row"><span style="display:flex;gap:10px;align-items:center">${x.img?`<img src="${x.img}">`:''}<span>${esc(x.name)}<br><small style="color:var(--mu)">${esc(x.cat)} · ${esc((x.sizes||[]).join(','))}</small></span></span><span style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${Number(x.price).toLocaleString()} ֏${x.pp?` → ${Number(x.pp).toLocaleString()} ֏`:''}<select data-s="${k}" style="width:auto;padding:6px 8px">${opts(x.status)}</select><button data-d="${k}">✕</button></span></div>`).join('')||'<p style="color:var(--mu)">Դեռ դատարկ է</p>';
+ $('l').querySelectorAll('[data-s]').forEach(s=>s.onchange=()=>{P[+s.dataset.s].status=s.value;save();toast('Թարմացվեց ✓')});
+ $('l').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{if(confirm('Ջնջե՞լ')){P.splice(+b.dataset.d,1);save();draw()}});
+}
+$('add').onclick=async()=>{
+ const name=$('n').value.trim(),price=$('p').value;
+ if(!name||!price)return toast('Լրացրեք անունը և գինը');
+ const f=$('i').files[0];
+ P.unshift({name,price:+price,cat:$('c').value.trim()||'Այլ',sizes:$('s').value.split(',').map(x=>x.trim()).filter(Boolean),img:f?await shrink(f):'',status:$('st').value,pp:+$('pp').value||0,ts:Date.now()});
+ save();draw();['n','p','c','i','pp'].forEach(k=>$(k).value='');toast('Ավելացվեց ✓');
+};
+$('ex').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(P)],{type:'application/json'}));a.download='products.json';a.click()};
+$('im').onclick=()=>$('imf').click();
+$('imf').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const d=JSON.parse(t);if(Array.isArray(d)){P=d;save();draw();toast('Ներմուծվեց ✓')}}catch(x){toast('Սխալ ֆայլ')}})};
+$('th').onclick=()=>{const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark'};
+if(matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.dataset.theme='dark';
+draw();
+</script></body></html><div class="btns" style="margin-top:16px"><button class="pri" id="ex">⬇ Արտահանել products.json</button><button id="im">⬆ Ներմուծել</button><input id="imf" type="file" accept=".json" style="display:none"></div>
 <p style="color:var(--mu);font-size:13px">Տվյալները պահվում են այս սարքի դիտարկիչում։ «Արտահանել» կոճակով ստացիր ֆայլ, որը կարող ես ուղարկել խանութի կայքին։</p></div>
 </div><div class="t" id="t"></div>
 <script>
